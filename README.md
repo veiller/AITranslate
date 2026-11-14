@@ -56,3 +56,7 @@ dotnet run --project AITranslate.WPF
 ## 说明
 
 当前没有自动化测试工程，改动以手工验证为主，验证清单见 `AGENTS.md` 的「验证方式」一节。
+
+## 许可证
+
+[MIT](LICENSE)
