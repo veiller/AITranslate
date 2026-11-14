@@ -1,0 +1,74 @@
+<Application x:Class="AITranslate.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AITranslate.WPF"
+             xmlns:conv="clr-namespace:AITranslate.WPF.Converters"
+             Startup="OnStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <conv:InverseBooleanConverter x:Key="InverseBool" />
+
+            <!--
+                自定义 TabItem 样式。
+                不用 HandyControl 的 TabItemStyle：它的 ControlTemplate 里有一个
+                MultiDataTrigger 条件绑定 {Binding TabStripPlacement, RelativeSource=FindAncestor TabControl}，
+                模板应用时 TabItem 可能还没挂到 TabControl 上，因而产生
+                "Cannot find source for binding with reference 'RelativeSource FindAncestor ...'" 警告。
+                这里改用只依赖自身属性（IsSelected / IsMouseOver）的触发器，从根上避免祖先查找。
+                仅支持 TabStripPlacement=Top。
+            -->
+            <Style x:Key="AppTabItemStyle" TargetType="TabItem">
+                <Setter Property="Foreground" Value="#FF6B6B6B" />
+                <Setter Property="Padding" Value="12,7" />
+                <Setter Property="MinHeight" Value="34" />
+                <!--
+                    必须是 Stretch：HandyControl 的 TabControl 模板把内容宿主(PART_SelectedContentHost)
+                    的对齐绑到了选中页签的 ContentAlignment 上。若这里设成 Center，
+                    整个页签内容区会被垂直居中并只占内容高度（预览框撑不开）。
+                -->
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Border x:Name="Bd"
+                                    Background="Transparent"
+                                    BorderBrush="#FFE3E3E3"
+                                    BorderThickness="0,0,1,0"
+                                    Padding="{TemplateBinding Padding}"
+                                    Margin="0,0,1,0"
+                                    SnapsToDevicePixels="True">
+                                <ContentPresenter x:Name="Header"
+                                                  ContentSource="Header"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#FFF4F4F4" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#FFFFFFFF" />
+                                    <Setter TargetName="Bd" Property="BorderBrush" Value="#FF1890FF" />
+                                    <Setter TargetName="Bd" Property="BorderThickness" Value="0,0,1,2" />
+                                    <Setter Property="Foreground" Value="#FF1890FF" />
+                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="#FFB8B8B8" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

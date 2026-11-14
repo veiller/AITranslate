@@ -1,0 +1,15 @@
+## .NET 构建产物
+bin/
+obj/
+
+## IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+## 沙箱权限修复记录（本地临时）
+.acl-recovery/
+
+## 本地验证产物
+.verify/
